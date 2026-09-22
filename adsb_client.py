@@ -32,7 +32,10 @@ def _status(ac):
 def fetch(lat, lon, radius_nm=None):
     radius_nm = radius_nm or config.DEFAULT_RADIUS_NM
     url = config.ADSB_API_URL.format(lat=lat, lon=lon, radius=radius_nm)
-    resp = requests2.get(url, headers={"User-Agent": "Mozilla/5.0"})
+    # adsb.lol rejects generic User-Agents ("too generic; include valid
+    # contact info") - point at the project repo rather than a personal email.
+    ua = "OverheadFlightTracker/1.0 (+https://github.com/craigdianesmith-glitch/tab5-adsb-flight-tracker-micropython)"
+    resp = requests2.get(url, headers={"User-Agent": ua})
     try:
         if resp.status_code != 200:
             # Raise rather than returning [] so a failed/blocked request is
